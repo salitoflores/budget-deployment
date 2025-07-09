@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  ms-administration:
+    image: local/ms-administration:latest
+    container_name: ms-administration
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_ADMIN}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME_ADMIN}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD_ADMIN}
+      SPRING_DRIVER_CLASS_NAME: ${SPRING_DRIVER_CLASS_NAME}
+    networks:
+      - budget-net
+
+  ms-security:
+    image: local/ms-security:latest
+    container_name: ms-security
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_SECURITY}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME_SECURITY}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD_SECURITY}
+      SPRING_DRIVER_CLASS_NAME: ${SPRING_DRIVER_CLASS_NAME}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    networks:
+      - budget-net
+
+  ms-budget:
+    image: local/ms-budget:latest
+    container_name: ms-budget
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_BUDGET}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME_BUDGET}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD_BUDGET}
+      SPRING_DRIVER_CLASS_NAME: ${SPRING_DRIVER_CLASS_NAME}
+    networks:
+      - budget-net
+
+  apigateway:
+    image: local/apigateway:latest
+    container_name: apigateway
+    environment:
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    networks:
+      - budget-net
+    ports:
+      - "8080:8080"
+
+networks:
+  budget-net:
